@@ -5,7 +5,13 @@ pipeline {
       steps {
         sh '''#!/bin/bash
 
-trufflehog --only-verified github --repo https://github.com/Arpit792/devsecops.git --fail
+wget https://github.com/trufflesecurity/trufflehog/releases/download/v3.44.0/trufflehog_3.44.0_linux_amd64.tar.gz
+tar -xvf trufflehog_3.44.0_linux_amd64.tar.gz
+rm trufflehog_3.44.0_linux_amd64.tar.gz LICENSE README.md
+mv trufflehog /tmp/trufflehog'''
+        sh '''#!/bin/bash
+
+/tmp/trufflehog --only-verified github --repo https://github.com/Arpit792/devsecops.git --fail
 
 if [[ $? != 0 ]]
 then
