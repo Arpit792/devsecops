@@ -31,7 +31,9 @@ rm -rf /tmp/sonar-scanner sonar-scanner-cli-4.8.0.2856-linux.zip
 mv sonar-scanner-4.8.0.2856-linux /tmp/sonar-scanner
 
 '''
-        sh '/tmp/sonar-scanner/bin/sonar-scanner'
+        sh '''#!/bin/bash
+
+/tmp/sonar-scanner/bin/sonar-scanner Dsonar.projectKey=devsecops'''
       }
     }
 
