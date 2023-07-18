@@ -10,6 +10,7 @@ trufflehog --only-verified github --repo https://github.com/Arpit792/devsecops.g
 if [[ $? != 0 ]]
 then
     echo "credentials found in the repo!!!"
+    exit 1
 fi'''
       }
     }
