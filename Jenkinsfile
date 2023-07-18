@@ -19,5 +19,18 @@ then
 fi'''
       }
     }
+
+    stage('sonarqube scan') {
+      steps {
+        sh '''#!/bin/bash
+
+echo "downloading sonar-scanner ..."
+wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+mv sonar-scanner-4.8.0.2856-linux /tmp/sonar-scanner
+'''
+      }
+    }
+
   }
 }
