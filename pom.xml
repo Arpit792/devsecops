@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>giis</groupId>
+	<artifactId>samples-test-spring</artifactId>
+	<version>1.4.2-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<organization>
+		<name>Grupo de Investigacion en Ingenieria del Software - Universidad de Oviedo</name>
+		<url>http://giis.uniovi.es/</url>
+	</organization>
+
+	<name>samples-test-spring</name>
+	<description>Ejemplo de pruebas con Spring Boot</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.13</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		
+		<surefire.version>3.1.2</surefire.version>
+		<!-- removes error flag that appears for some eclipse users -->
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+		<!-- required for sonarcloud.io -->
+		<sonar.organization>giis</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<!--required here to get the right versions, issue #15-->
+		<selenium.version>4.10.0</selenium.version>
+	</properties>
+
+	<dependencies>
+		<!-- Dependencias generales de Spring Boot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<!--
+		Declaraciones para mitigar vulnerabilidades en dependencias transitivas por las utilizadas mas adelante:
+		-xstream 1.4.15 usado por jbehave-core, bump to: 1.4.18 (sigue quedando alguna vulnerabilidad, pero es la ultima version)
+		-->
+		<dependency>
+		    <groupId>com.thoughtworks.xstream</groupId>
+		    <artifactId>xstream</artifactId>
+		    <version>1.4.20</version>
+		</dependency>
+		
+		<!-- lombok, para generar automaticamente getters y setters -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- necesario para que surefire plugin detecte tests al pasar de 2.21.0 a 2.22.2 -->
+		<dependency>
+		    <groupId>org.junit.vintage</groupId>
+		    <artifactId>junit-vintage-engine</artifactId>
+		    <scope>test</scope>
+		    <exclusions>
+		        <exclusion>
+		            <groupId>org.hamcrest</groupId>
+		            <artifactId>hamcrest-core</artifactId>
+		        </exclusion>
+		    </exclusions>
+		</dependency>
+		<!-- pruebas junit con parametros -->
+		<dependency>
+			<groupId>pl.pragmatists</groupId>
+			<artifactId>JUnitParams</artifactId>
+			<version>1.1.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- pruebas BDD -->
+		<dependency>
+			<groupId>org.jbehave</groupId>
+			<artifactId>jbehave-core</artifactId>
+			<version>5.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jbehave</groupId>
+			<artifactId>jbehave-spring</artifactId>
+			<version>5.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.valfirst</groupId>
+			<artifactId>jbehave-junit-runner</artifactId>
+			<version>2.3.2</version>
+    		<scope>test</scope>
+		</dependency>
+		
+		<!-- dependencias para usar clases de utilidad que tambien se usan samples-test-java -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+		
+		<!-- Selenium bindings -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>${selenium.version}</version><!--$NO-MVN-MAN-VER$-->
+    		<scope>test</scope>
+		</dependency>
+		<!-- not needed as it is included by selema
+		<dependency>
+    		<groupId>io.github.bonigarcia</groupId>
+    		<artifactId>webdrivermanager</artifactId>
+    		<version>5.0.3</version>
+    		<scope>test</scope>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>io.github.javiertuya</groupId>
+			<artifactId>selema</artifactId>
+			<version>3.0.3</version>
+    		<scope>test</scope>
+		</dependency>
+		<!-- Tras las actualizaciones de 2023-04-11 la ultima version de webdrivermanager
+		incluida en selema esta incluyendo httpclient5 v5.1.4, que causa fallo 
+		en el postdeploy test, fuerza aqui a una version mas actualizada 
+		El causante podria ser surefire plugin que muestra un warning al hacer override? -->
+		<dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version><!--$NO-MVN-MAN-VER$-->
+    		<scope>test</scope>
+        </dependency>
+
+	</dependencies>
+
+  	<distributionManagement>
+    	<repository>
+      		<id>github</id>
+      		<name>GitHub Packages</name>
+      		<url>https://maven.pkg.github.com/javiertuya/samples-test-spring</url>
+    	</repository>
+  	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+			        <execution>
+						<id>build-info</id>
+						<goals>
+							<goal>build-info</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Resto de plugins comunes con samples-test-java para separar la estructura 
+				ut/it, generar reports cobertura y otros -->
+
+			<!-- pruebas ut -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.version}</version><!--$NO-MVN-MAN-VER$-->
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+					<excludes>
+						<exclude>**/it/**/*.*</exclude>
+					</excludes>
+					<!-- Sets the VM argument line used when unit tests are run under JaCoCo -->
+					<argLine>${surefireArgLine}</argLine>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+					<!--para evitar fallos con openjdk en linux-->
+                	<useSystemClassLoader>false</useSystemClassLoader>
+				</configuration>
+			</plugin>
+			<!-- pruebas it: https://dzone.com/articles/integration-tests-with-maven -->
+			<plugin>
+				<!-- definicion de localizacion pruebas it segun convenio maven -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-test-source</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/it/java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- ejecucion de pruebas (failsafe) -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${surefire.version}</version><!--$NO-MVN-MAN-VER$-->
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+						<configuration>
+							<includes>
+								<include>**/it/**/*.*</include>
+							</includes>
+							<!-- Sets the VM argument line used when integration tests are run. -->
+							<argLine>${failsafeArgLine}</argLine>
+							<!-- Skips integration tests if the value of skip.integration.tests 
+								property is true -->
+							<skipITs>${skipITs}</skipITs>
+							<!--para evitar fallos con openjdk en linux-->
+                			<useSystemClassLoader>false</useSystemClassLoader>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Configuracion para tests con jbehave. Consideraciones: Por defecto, 
+				jbehave busca las pruebas en src/main, pero como son pruebas se han puesto 
+				en las carpetas src/test o src/it. Por ello se requiere indicar el scope 
+				en test (para poder tener todo junto en el mismo paquete estan los escenarios 
+				gherkin y las clases java auxiliares necesarias). Otro problema es que desde 
+				Eclipse los test gherkin se copian correctamente a la carpeta con las clases 
+				de test, pero desde maven no. Por eso se anyade un resources plugin que realiza 
+				esta copia justo tras compilar las pruebas y antes de ejecutarlas (fase process-test-classes) -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<!-- copia del fuente de las historias a target para que se puedan localizar -->
+					<execution>
+						<id>copy-stories</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/test-classes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/test/java</directory>
+									<includes>
+										<include>**/*.story</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+								<resource>
+									<directory>${basedir}/src/it/java</directory>
+									<includes>
+										<include>**/*.story</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- jacoco plugin for code coverage, ut, it. Ver: https://www.petrikainulainen.net/programming/maven/creating-code-coverage-reports-for-unit-and-integration-tests-with-the-jacoco-maven-plugin/ -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.10</version>
+				<configuration>
+					<excludes>
+						<exclude>**/TableColumnAdjuster.*</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>pre-unit-test</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
+							<propertyName>surefireArgLine</propertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
+							<outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>pre-integration-test</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+							<propertyName>failsafeArgLine</propertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-integration-test</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/TableColumnAdjuster.*</exclude>
+							</excludes>
+							<dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+							<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- reports test ut (surefire) e it (failsafe) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>${surefire.version}</version>
+				<executions>
+					<execution>
+						<id>ut-reports</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report-only</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>it-reports</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>failsafe-report-only</goal>
+						</goals>
+						<configuration>
+							<!-- si no se pone esto no sale el report en jenkins (si desde eclipse) -->
+							<outputName>failsafe-report</outputName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Otras tareas realizadas con ant-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<!-- Reports de test (ut+it) estilo junit -->
+					<execution>
+						<id>junit-reports-ut</id>
+						<phase>test</phase>
+						<configuration>
+							<target unless="skipTests">
+								<junitreport todir="target/surefire-reports">
+									<fileset dir="target/surefire-reports">
+										<include name="**/*.xml" />
+									</fileset>
+									<report format="frames" todir="target/site/junit-frames" />
+									<report format="noframes"
+										todir="target/site/junit-noframes" />
+								</junitreport>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>junit-reports-ut-it</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<target unless="skipITs">
+								<junitreport todir="target/surefire-reports">
+									<fileset dir="target/surefire-reports">
+										<include name="**/*.xml" />
+									</fileset>
+									<fileset dir="target/failsafe-reports">
+										<include name="**/*.xml" />
+									</fileset>
+									<report format="frames" todir="target/site/junit-frames" />
+									<report format="noframes"
+										todir="target/site/junit-noframes" />
+								</junitreport>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-junit</artifactId>
+						<version>1.10.13</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-trax</artifactId>
+						<version>1.8.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>2.1.0</version>
+			</plugin>
+			<!-- Generacion de documentacion javadoc, incluyendo un jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<overview>${basedir}/src/main/java/overview.html</overview>
+					<sourcepath>${basedir}/src/main/java;${basedir}/src/test/java;${basedir}/src/it/java</sourcepath>
+					<outputDirectory>${project.reporting.outputDirectory}/apidocs</outputDirectory>
+					<show>private</show>
+					<nohelp>true</nohelp>
+					<quiet>true</quiet>
+					<doclint>none</doclint>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-all-javadocs</id>
+						<phase>install</phase>
+						<goals>
+							<!--normalmente este goal seria jar, no interesa el jar, solo el javadoc
+							y evita warnings/errores porque se estan generando javadocs de los tests-->
+							<goal>test-javadoc</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 
+			Jar ejecutable con java -jar, establece un clasificador 'deploy' para diferenciarlo del resto 
+			En este caso se desactiva: como usa spring como parent, usara directamente el repackage generado por este parent
+			(el jar resultante sera renombrado para coincidir con el nombre esperado por el dockerfile)
+			<plugin>
+            	<groupId>org.springframework.boot</groupId>
+            	<artifactId>spring-boot-maven-plugin</artifactId>
+            	<configuration>
+            	    <mainClass>giis.demo.descuento.DescuentoApplication</mainClass>
+            	    <classifier>deploy</classifier>
+            	</configuration>
+            	<executions>
+                	<execution>
+                    	<goals>
+                        	<goal>repackage</goal>
+                    	</goals>
+                	</execution>
+            	</executions>
+        	</plugin>
+        	-->
+		</plugins>
+	</build>
+
+</project>
