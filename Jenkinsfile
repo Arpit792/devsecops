@@ -35,7 +35,6 @@ mv sonar-scanner-4.8.0.2856-linux /tmp/sonar-scanner
 
 /tmp/sonar-scanner/bin/sonar-scanner \\
   -Dsonar.projectKey=devsecops \\
-  -Dsonar.sources=. \\
   -Dsonar.host.url=http://13.234.156.250:9000 \\
   -Dsonar.token=sqp_60d3cd0dfc8474ca2946f2d6cf03af6404e99fca'''
       }
