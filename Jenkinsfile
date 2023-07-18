@@ -5,8 +5,8 @@ pipeline {
       steps {
         sh '''#!/bin/bash
 
-wget https://github.com/trufflesecurity/trufflehog/releases/download/v3.44.0/trufflehog_3.44.0_linux_amd64.tar.gz
-tar -xvf trufflehog_3.44.0_linux_amd64.tar.gz
+wget -q https://github.com/trufflesecurity/trufflehog/releases/download/v3.44.0/trufflehog_3.44.0_linux_amd64.tar.gz
+tar -xf trufflehog_3.44.0_linux_amd64.tar.gz
 rm trufflehog_3.44.0_linux_amd64.tar.gz LICENSE README.md
 mv trufflehog /tmp/trufflehog'''
         sh '''#!/bin/bash
@@ -26,7 +26,7 @@ fi'''
 
 echo "downloading sonar-scanner ..."
 wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+unzip -qq sonar-scanner-cli-4.8.0.2856-linux.zip
 mv sonar-scanner-4.8.0.2856-linux /tmp/sonar-scanner
 '''
       }
