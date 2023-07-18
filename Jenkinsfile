@@ -11,7 +11,7 @@ rm trufflehog_3.44.0_linux_amd64.tar.gz LICENSE README.md
 mv trufflehog /tmp/trufflehog'''
         sh '''#!/bin/bash
 
-/tmp/trufflehog --only-verified git ssh://github.com/trufflesecurity/test_keys --fail
+/tmp/trufflehog --only-verified git https://github.com/Arpit792/devsecops --fail
 
 if [[ $? != 0 ]]
 then
