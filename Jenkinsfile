@@ -33,7 +33,7 @@ mv sonar-scanner-4.8.0.2856-linux /tmp/sonar-scanner
 '''
         sh '''#!/bin/bash
 
-/tmp/sonar-scanner/bin/sonar-scanner Dsonar.projectKey=devsecops'''
+/tmp/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=devsecops'''
       }
     }
 
