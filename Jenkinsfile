@@ -19,14 +19,5 @@ then
 fi'''
       }
     }
-
-    stage ('sonarqube') {
-      echo "****** SonarQube analysis" 
-      def scannerHome = tool 'SonarQube Scanner Linux';
-      def sonarParams="-Dsonar.projectKey=my:samples-test-spring"
-      withSonarQubeEnv('songis') {
-        sh "${scannerHome}/bin/sonar-scanner ${sonarParams}"
-      }
-	  }
   }
 }
