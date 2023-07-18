@@ -33,7 +33,7 @@ mv sonar-scanner-4.8.0.2856-linux /tmp/sonar-scanner
 '''
         sh '''#!/bin/bash
 
-/tmp/sonar-scanner/bin/sonar-scanner \\
+/opt/maven/bin/mvn clean verify sonar:sonar \\
   -Dsonar.projectKey=devsecops \\
   -Dsonar.host.url=http://13.234.156.250:9000 \\
   -Dsonar.token=sqp_60d3cd0dfc8474ca2946f2d6cf03af6404e99fca
