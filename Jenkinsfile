@@ -21,5 +21,14 @@ fi'''
       }
     }
 
+    stage('sonarqube') {
+      steps {
+        withSonarQubeEnv(installationName: 'devsecops', credentialsId: 'devsecops') {
+          waitForQualityGate(webhookSecretId: 'devsecops', abortPipeline: true, credentialsId: 'devsecops')
+        }
+
+      }
+    }
+
   }
 }
