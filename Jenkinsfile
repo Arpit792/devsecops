@@ -4,15 +4,12 @@ pipeline {
     stage('Scan Secrets') {
       steps {
         sh '''#!/bin/bash
-
 wget https://github.com/trufflesecurity/trufflehog/releases/download/v3.44.0/trufflehog_3.44.0_linux_amd64.tar.gz
 tar -xvf trufflehog_3.44.0_linux_amd64.tar.gz
 rm trufflehog_3.44.0_linux_amd64.tar.gz LICENSE README.md
 mv trufflehog /tmp/trufflehog'''
         sh '''#!/bin/bash
-
 /tmp/trufflehog --only-verified git https://github.com/Arpit792/devsecops --fail
-
 if [[ $? != 0 ]]
 then
     echo "credentials found in the repo!!!"
@@ -21,14 +18,13 @@ fi'''
       }
     }
 
-    stage('sonarqube') {
-      steps {
-        withSonarQubeEnv(installationName: 'devsecops', credentialsId: 'devsecops') {
-          waitForQualityGate(webhookSecretId: 'devsecops', abortPipeline: true, credentialsId: 'devsecops')
-        }
-
+    stage ('sonarqube') {
+      echo "****** SonarQube analysis" 
+      def scannerHome = tool 'SonarQube Scanner Linux';
+      def sonarParams="-Dsonar.projectKey=my:samples-test-spring"
+      withSonarQubeEnv('songis') {
+        sh "${scannerHome}/bin/sonar-scanner ${sonarParams}"
       }
-    }
-
+	  }
   }
 }
